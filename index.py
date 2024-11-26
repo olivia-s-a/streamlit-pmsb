@@ -1,8 +1,11 @@
 import streamlit as st
 import geopandas as gpd
 import pandas as pd
+import leafmap.foliumap as leafmap
+from folium import LayerControl, TileLayer
 from os.path import join
-import random
+
+
 
 
 
@@ -29,6 +32,7 @@ st.text("Este material tem por objetivo registrar a metodologia referente ao pro
 
 
 #testes
+import random
 num_rand = random.randint(1, 85)
 num_rand
 st.dataframe(fcu)
@@ -98,10 +102,11 @@ st.subheader(f'{sum_unidade} pessoas')
 
 
 
-cols_b1, cols_b2 = st.columns(3)
+cols_b1, cols_b2 = st.columns(2)
 
 
 
+distrito.explore() #Não deu certo... 
 
 
 
