@@ -33,8 +33,10 @@ st.text("Este material tem por objetivo registrar a metodologia referente ao pro
 
 #testes
 import random
-num_rand = random.randint(1, 85)
+num_rand = random.randint(1, 3)
+abc = random.choice(["a", "b", "c"])
 num_rand
+abc
 st.dataframe(fcu)
 
 # 1: Cálculo populacional e de domicílios com base no Censo 2022
@@ -59,7 +61,7 @@ for a, item in enumerate(itens):
 
 sum_mun = distrito['pop_total'].sum()
 st.markdown("<h5>Total do Município</h5>", unsafe_allow_html=True)
-st.subheader(f'{sum_mun} pessoas')
+st.subheader(f'{sum_mun:,} pessoas'.replace(",", "."))
 
 choice_unidade = st.selectbox("", unidades['name'])
 
@@ -82,12 +84,11 @@ choice_name = st.selectbox(
     placeholder= "Escolha uma unidade..."
     )
 
-if choice_name !=None:
-    if name_gdf_unidade == 'fcu':
+if name_gdf_unidade == 'fcu':
         pop_column = 'pop_fcu'
-    else:
+else:
         pop_column = 'pop_total'
-    
+if choice_name !=None:
     sum_unidade = (
             gdf_unidade[
                 gdf_unidade[name_column_unidade]==choice_name
@@ -96,13 +97,24 @@ if choice_name !=None:
             .values[0]
         )
 else:
-    sum_unidade = sum_mun
+    sum_unidade = gdf_unidade[pop_column].sum()
 
-st.subheader(f'{sum_unidade} pessoas')
+st.subheader(f'{sum_unidade:,} pessoas'.replace(",", "."))
 
 
 
 cols_b1, cols_b2 = st.columns(2)
+with cols_b2:
+    st.dataframe(
+        gdf_unidade[
+            [name_column_unidade, pop_column]
+        ],
+        column_config={
+            name_column_unidade : 'Unidade',
+            pop_column: 'População'
+        },
+        hide_index=True
+    )
 
 
 
