@@ -102,10 +102,10 @@ else:
 st.subheader(f'{sum_unidade:,} pessoas'.replace(",", "."))
 
 
-plot_cols ={
-        'Unidade' : name_column_unidade,
-        'População' : pop_column
-    }
+columns_names ={
+    name_column_unidade : 'Unidade',
+    pop_column: 'População'
+}
 cols_b1, cols_b2 = st.columns(2)
 with cols_b1:
     m1 = leafmap.Map(tiles = "Cartodb Positron")
@@ -113,14 +113,14 @@ with cols_b1:
     gdf_unidade.explore(
         m = m1,
         color= '#0D04FF',
-        tooltip=list(plot_cols.values()),
+        tooltip=list(columns_names.keys()),
         tooltip_kwds={
-            'aliases': list(plot_cols.keys()),
+            'aliases': list(columns_names.values()),
             'localize': True
         },
-        popup=list(plot_cols.values()),
+        popup=list(columns_names.keys()),
         popup_kwds={
-            'aliases': list(plot_cols.keys()),
+            'aliases': list(columns_names.values()),
             'localize': True
         }
     )
@@ -134,13 +134,9 @@ with cols_b2:
             [name_column_unidade, pop_column]
         ],
         height=600,
-        column_config=plot_cols,
+        column_config=columns_names,
         hide_index=True
     )
-
-
-
-
 
 
 
