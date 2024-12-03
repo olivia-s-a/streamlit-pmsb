@@ -4,6 +4,7 @@ import pandas as pd
 import leafmap.foliumap as leafmap
 from folium import LayerControl, TileLayer
 from os.path import join
+import utils
 
 
 
@@ -16,13 +17,13 @@ subpref = gpd.read_file(join("data", "2024_11_26", "03_consumo_subprefeitura"))
 fcu = gpd.read_file(join("data", "2024_11_26", "pop_fcu"))
 #https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios_preliminares/malha_com_atributos/setores/shp/UF/SP/SP_Malha_Preliminar_2022.zip
 
-itens = [
+unidades_list = [
     ("Subprefeituras", "Lorem ipsum dolor sit amet...", 'subpref', 'nm_subpref'),
     ("Distritos", "Lorem ipsum dolor sit amet...", 'distrito', 'nm_distrit'),
     ("Favelas e Comunidades Urbanas", "Lorem ipsum dolor sit amet...", 'fcu', 'nm_fcu'),
     ("Sub Bacias Hidrográficas", "Lorem ipsum dolor sit amet...", 'subbac', 'nm_bacia_h')
 ]
-unidades = pd.DataFrame(itens, columns=['name', 'desc', 'gdf_name', 'column_name'])
+unidades = pd.DataFrame(unidades_list, columns=['name', 'desc', 'gdf_name', 'column_name'])
 
 
 # Cabeçalho
@@ -40,22 +41,11 @@ abc
 st.dataframe(fcu)
 
 # 1: Cálculo populacional e de domicílios com base no Censo 2022
-st.markdown("""
-    <ul>
-        <li style="font-size: 18px; display: flex; align-items: center;"> 
-            <div style="width: 30px; height: 30px; background-color: #3498db; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; margin-right: 10px;">1</div>
-            <h3>Cálculo populacional e de domicílios com base no Censo 2022</h3>
-        </li>
-    </ul>
-""", unsafe_allow_html=True)
+utils.title_numbered_blue_dot(num = 1, title_name = "Cálculo populacional e de domicílios com base no Censo 2022")
 
-st.markdown("<h5>Desagregado por</h5>", unsafe_allow_html=True)
-
-cols_a = st.columns(len(itens))  
-for a, item in enumerate(itens):
-    col = cols_a[a]  
-    with col:
-        st.markdown(f"<p><strong>{a + 1}. {item[0]}</strong><br> {item[1]}</p>", unsafe_allow_html=True)
+utils.columns_bullet_list(
+    title_bullet_list = "Desagregado por", 
+    itens=unidades_list)
 
 
 
@@ -142,21 +132,48 @@ with cols_b2:
     )
 
 
+with st.popover("Metodologia Completa de Cálculo de População"):
+    st.markdown("""
+        <ol >
+            <li>Foram utilizadas as malhas disponíveis em duas bases de dados principais, a do Censo Demográfico de 2022, com as informações agregadas por setores censitários disponibilizada pelo IBGE1; e as das malhas das unidades de desagregação, disponibilizadas pelo GeoSampa2.</li>
+            <li>Para a maior parte das unidades, nós selecionamos apenas os setores censitários que correspondessem ao município de São Paulo, mas para as sub bacias hidrográficas, que não se enquadram na precisão das fronteiras municipais, foram selecionados todos os municípios que tivessem ao menos alguma parte de seu território interseccionando com alguma das sub bacias da malha.</li> 
+            <li>Para trabalhar com ambas as malhas, calculamos a similaridade entre elas, e realizamos a intersecção (com o método “overlay intersection” de uma biblioteca do Python chamada GeoPandas). Fizemos o cálculo de cada unidade individualmente, mas o processo permaneceu o mesmo na maioria dos casos. </li>
+            <li>Primeiro, identificamos as áreas de interseção, ou seja, as regiões onde os polígonos dos setores e das unidades se sobrepõe. e fazemos um recorte disso. Ou seja se há um setor que fica dividido pelo contorno de dois ou mais polígonos da unidade, dividiremos esse setor seguindo o contorno da unidade. Contudo, estabelecemos um tamanho mínimo de  10m para essas intersecções, evitando que uma falsa intersecção permanecesse. </li>
+            <li>Calculando a área desses setores antes e após a intersecção, para realizarmos para cada polígono da intersecção o cálculo da porcentagem de área que ela representa do setor total (área da intersecção/área total do setor).</li>
+            <li>Para calcular o valor correspondente dos indicadores em cada intersecção, multiplicamos seus valores por sua percentagem da área do setor (valor do indicador total do setor * porcentagem da área do setor que corresponde ao polígono). Assim, é considerado que a variável, seja ela, por exemplo, população ou domicílios, está homogeneamente distribuída no setor e, portanto, a distribuição de seus valores pode ser equivalida à área da intersecção. </li>
+        </ol>
+        """, 
+        unsafe_allow_html=True
+    )
 
-
+    st.subheader("Obstáculos")
+    st.text("""
+        Há uma incompatibilidade entre o limite municipal da malha do IBGE e a do GeoSampa, de forma que ao realizar o cálculo das intersecções alguns setores censitários ficaram para fora, enquanto regiões que deveriam ter setores estavam vazias. Para resolver isso, adicionamos os setores que haviam ficado de fora, independente da razão, manualmente. 
+        Nossa metodologia não permite que identifiquemos precisamente a distribuição das variáveis em casos onde elas são distribuídas de forma não homogênea. 
+    """)
 
 
 # 2. Demanda da População por água
-st.markdown("""
-    <ul>
-        <li style="font-size: 18px; display: flex; align-items: center;">
-            <div style="width: 30px; height: 30px; background-color: #3498db; border-radius: 50%; color: white; display: flex; justify-content: center; align-items: center; margin-right: 10px;">2</div>
-            <strong>Demanda da população por água</strong>
-        </li>
-    </ul>
-""", unsafe_allow_html=True)
+utils.title_numbered_blue_dot(num = 2, title_name = "Demanda da População por água")
 
-# Teste com for 
-st.markdown("<h5>Desagregado por</h5>", unsafe_allow_html=True)
+utils.columns_bullet_list(
+    title_bullet_list = "Desagregado por", 
+    itens=unidades_list
+)
 
-# Lista de itens
+with st.container():
+    cols_c1, cols_c2 = st.columns(2)
+    with cols_c1:
+        st.text("Consumo por pessoa")
+        st.subheader("140 L/dia")
+    with cols_c2:
+        st.text("População por setor")
+        st.markdown("<h3>População <i>α</i></h3>", unsafe_allow_html=True)
+    
+    st.text("Demanda estimada por setor")
+    st.markdown("<h3>População <i>α</i> X 140</h3>", unsafe_allow_html=True)
+
+
+
+
+
