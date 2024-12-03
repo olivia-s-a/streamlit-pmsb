@@ -33,7 +33,7 @@ st.text("Este material tem por objetivo registrar a metodologia referente ao pro
 
 #testes
 import random
-num_rand = random.randint(1, 3)
+num_rand = random.randint(1, 45)
 abc = random.choice(["a", "b", "c"])
 num_rand
 abc
@@ -102,23 +102,43 @@ else:
 st.subheader(f'{sum_unidade:,} pessoas'.replace(",", "."))
 
 
-
+plot_cols ={
+        'Unidade' : name_column_unidade,
+        'População' : pop_column
+    }
 cols_b1, cols_b2 = st.columns(2)
+with cols_b1:
+    m1 = leafmap.Map(tiles = "Cartodb Positron")
+    
+    gdf_unidade.explore(
+        m = m1,
+        color= '#0D04FF',
+        tooltip=list(plot_cols.values()),
+        tooltip_kwds={
+            'aliases': list(plot_cols.keys()),
+            'localize': True
+        },
+        popup=list(plot_cols.values()),
+        popup_kwds={
+            'aliases': list(plot_cols.keys()),
+            'localize': True
+        }
+    )
+    minx, miny, maxx, maxy = gdf_unidade.to_crs('EPSG:4326').total_bounds
+    bounds=[(miny, minx),(maxy, maxx)]
+    m1.fit_bounds(bounds)
+    st.components.v1.html(m1.to_html(), height=600)
 with cols_b2:
     st.dataframe(
         gdf_unidade[
             [name_column_unidade, pop_column]
         ],
-        column_config={
-            name_column_unidade : 'Unidade',
-            pop_column: 'População'
-        },
+        height=600,
+        column_config=plot_cols,
         hide_index=True
     )
 
 
-
-distrito.explore() #Não deu certo... 
 
 
 
