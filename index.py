@@ -131,26 +131,21 @@ with cols_b2:
         hide_index=True
     )
 
-
-with st.popover("Metodologia Completa de Cálculo de População"):
-    st.markdown("""
-        <ol >
-            <li>Foram utilizadas as malhas disponíveis em duas bases de dados principais, a do Censo Demográfico de 2022, com as informações agregadas por setores censitários disponibilizada pelo IBGE1; e as das malhas das unidades de desagregação, disponibilizadas pelo GeoSampa2.</li>
-            <li>Para a maior parte das unidades, nós selecionamos apenas os setores censitários que correspondessem ao município de São Paulo, mas para as sub bacias hidrográficas, que não se enquadram na precisão das fronteiras municipais, foram selecionados todos os municípios que tivessem ao menos alguma parte de seu território interseccionando com alguma das sub bacias da malha.</li> 
-            <li>Para trabalhar com ambas as malhas, calculamos a similaridade entre elas, e realizamos a intersecção (com o método “overlay intersection” de uma biblioteca do Python chamada GeoPandas). Fizemos o cálculo de cada unidade individualmente, mas o processo permaneceu o mesmo na maioria dos casos. </li>
-            <li>Primeiro, identificamos as áreas de interseção, ou seja, as regiões onde os polígonos dos setores e das unidades se sobrepõe. e fazemos um recorte disso. Ou seja se há um setor que fica dividido pelo contorno de dois ou mais polígonos da unidade, dividiremos esse setor seguindo o contorno da unidade. Contudo, estabelecemos um tamanho mínimo de  10m para essas intersecções, evitando que uma falsa intersecção permanecesse. </li>
-            <li>Calculando a área desses setores antes e após a intersecção, para realizarmos para cada polígono da intersecção o cálculo da porcentagem de área que ela representa do setor total (área da intersecção/área total do setor).</li>
-            <li>Para calcular o valor correspondente dos indicadores em cada intersecção, multiplicamos seus valores por sua percentagem da área do setor (valor do indicador total do setor * porcentagem da área do setor que corresponde ao polígono). Assim, é considerado que a variável, seja ela, por exemplo, população ou domicílios, está homogeneamente distribuída no setor e, portanto, a distribuição de seus valores pode ser equivalida à área da intersecção. </li>
-        </ol>
-        """, 
-        unsafe_allow_html=True
-    )
-
-    st.subheader("Obstáculos")
-    st.text("""
-        Há uma incompatibilidade entre o limite municipal da malha do IBGE e a do GeoSampa, de forma que ao realizar o cálculo das intersecções alguns setores censitários ficaram para fora, enquanto regiões que deveriam ter setores estavam vazias. Para resolver isso, adicionamos os setores que haviam ficado de fora, independente da razão, manualmente. 
+utils.popover_metodologia(
+    name_popover = "Metodologia Completa de Cálculo de População", 
+    metodologia = ("""
+        Foram utilizadas as malhas disponíveis em duas bases de dados principais, a do Censo Demográfico de 2022, com as informações agregadas por setores censitários disponibilizada pelo IBGE1; e as das malhas das unidades de desagregação, disponibilizadas pelo GeoSampa2. 
+        Para a maior parte das unidades, nós selecionamos apenas os setores censitários que correspondessem ao município de São Paulo, mas para as sub bacias hidrográficas, que não se enquadram na precisão das fronteiras municipais, foram selecionados todos os municípios que tivessem ao menos alguma parte de seu território interseccionando com alguma das sub bacias da malha. 
+        Para trabalhar com ambas as malhas, calculamos a similaridade entre elas, e realizamos a intersecção (com o método “overlay intersection” de uma biblioteca do Python chamada GeoPandas). Fizemos o cálculo de cada unidade individualmente, mas o processo permaneceu o mesmo na maioria dos casos. 
+        Primeiro, identificamos as áreas de interseção, ou seja, as regiões onde os polígonos dos setores e das unidades se sobrepõe. e fazemos um recorte disso. Ou seja se há um setor que fica dividido pelo contorno de dois ou mais polígonos da unidade, dividiremos esse setor seguindo o contorno da unidade. Contudo, estabelecemos um tamanho mínimo de  10m para essas intersecções, evitando que uma falsa intersecção permanecesse. 
+        Calculando a área desses setores antes e após a intersecção, para realizarmos para cada polígono da intersecção o cálculo da porcentagem de área que ela representa do setor total (área da intersecção/área total do setor).
+        Para calcular o valor correspondente dos indicadores em cada intersecção, multiplicamos seus valores por sua percentagem da área do setor (valor do indicador total do setor * porcentagem da área do setor que corresponde ao polígono). Assim, é considerado que a variável, seja ela, por exemplo, população ou domicílios, está homogeneamente distribuída no setor e, portanto, a distribuição de seus valores pode ser equivalida à área da intersecção."""),
+    obstaculos = (
+        """Há uma incompatibilidade entre o limite municipal da malha do IBGE e a do GeoSampa, de forma que ao realizar o cálculo das intersecções alguns setores censitários ficaram para fora, enquanto regiões que deveriam ter setores estavam vazias. Para resolver isso, adicionamos os setores que haviam ficado de fora, independente da razão, manualmente. 
         Nossa metodologia não permite que identifiquemos precisamente a distribuição das variáveis em casos onde elas são distribuídas de forma não homogênea. 
-    """)
+    """
+    )
+)
 
 
 # 2. Demanda da População por água
@@ -183,7 +178,45 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
+#3. Análise da cobertua e distribuição da rede de abastecimento de água
+utils.title_numbered_blue_dot(
+    num= 3,
+    title_name = "Análise da cobertua e distribuição da rede de abastecimento de água"
+)
 
+cols_d1, cols_d2 = st.columns(2)
+with cols_d1:
+    st.markdown("<h5>Desagregado por<h5>", unsafe_allow_html=True)
+    st.markdown(
+        """
+            <ol>
+                <li><strong>Subprefeitura</strong></li>
+            </ol>
+        """, unsafe_allow_html=True
+    )
+with cols_d2:
+    st.markdown("<h5>Resultado por<h5>", unsafe_allow_html=True)
+    st.markdown(
+        """
+            <ol>
+                <li><strong>Logradouros cobertos</strong></li>
+                <li><strong>Logradouros não cobertos</strong></li>
+            </ol>
+        """, unsafe_allow_html=True
+    )
 
+#st.bar_chart()
 
+utils.popover_metodologia(
+    name_popover = "Metodologia Completa de Cálculo", 
+    metodologia = ("""
+        Foi realizado o cruzamento entre as feições da rede de abastecimento de água e as feições de logradouros oficiais para identificar e quantificar a cobertura de abastecimento de água no município. Os logradouros são entendidos como via de acesso aos imóveis que necessitam de abastecimento de água e foram escolhidos por serem uma base georreferenciada mais precisa do que outras alternativas, como o CNEFE3. 
+        Foi aplicado um buffer ao redor das feições da rede de abastecimento para representar a área de cobertura potencial da rede. O buffer aplicado foi de 20 metros, representando aproximadamente uma via de 2 faixas + passeio, considerando que a tubulação pode estar representada em um dos extremos da via, enquanto o próprio logradouro provavelmente estará representado no centro da via.
+        Depois, foi calculada a interseção entre as linhas dos logradouros e a geometria da área de cobertura da rede para obtenção dos trechos de logradouro que possuem cobertura (potencial) de abastecimento de água. 
+        Finalmente, foi calculada a diferença entre as linhas dos logradouros e a geometria da área de cobertura da rede para obtenção dos trechos de logradouro que não possuem cobertura de abastecimento de água. 
+        """),
+    obstaculos = (
+        """Utilizar a rua/logradouro como unidade de acesso ao domicílio vai contabilizar a ausência de rede mesmo onde não tem domicílio. """
+    )
+)
 
