@@ -132,7 +132,10 @@ with cols_b2:
     st.dataframe(
         gdf_unidade[
             [name_column_unidade, pop_column]
-        ],
+        ].sort_values(
+            by =pop_column,
+            ascending = False
+        ),
         height=600,
         column_config=columns_names,
         hide_index=True
