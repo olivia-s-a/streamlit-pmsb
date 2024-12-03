@@ -1,0 +1,19 @@
+/*Imports*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+
+h1, h2, h3, h4, h5, h6, p , a , q, li, ul, ol{
+    font-family: 'Roboto', sans-serif;
+}
+
+/*Container cabeçalho*/
+
+.st-emotion-cache-1legdae{ 
+    text-align: center;
+} 
+
+.e1f1d6gn2{
+    width: 110%;
+    margin: 0 auto;
+}
+

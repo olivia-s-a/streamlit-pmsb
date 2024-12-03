@@ -6,8 +6,9 @@ from folium import LayerControl, TileLayer
 from os.path import join
 from utils import functions, create_sidebar
 
-
-
+#Read css
+with open("styles.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Dados
 distrito = gpd.read_file(join("data", "2024_11_26", "03_consumo_distrito"))
@@ -25,10 +26,13 @@ unidades_list = [
 unidades = pd.DataFrame(unidades_list, columns=['name', 'desc', 'gdf_name', 'column_name'])
 
 
+
+
 # Cabeçalho
-st.title("Dados de Abastecimento de Água")
-st.header("Metodologia de análise dos dados | PMSB 2024 | CODATA")
-st.text("Este material tem por objetivo registrar a metodologia referente ao processamento de dados elaborado por Codata para a elaboração do diagnóstico do Plano Municipal de Saneamento Básico (2024/2025). Nesse sentido, ele deve ser resultado de um processo enquanto as análises estão sendo realizadas.")
+with st.container(border=False):
+    st.title("Dados de Abastecimento de Água")
+    st.subheader("Metodologia de análise dos dados | PMSB 2024 | CODATA")
+    st.text("Este material tem por objetivo registrar a metodologia referente ao processamento de dados elaborado por Codata para a elaboração do diagnóstico do Plano Municipal de Saneamento Básico (2024/2025). Nesse sentido, ele deve ser resultado de um processo enquanto as análises estão sendo realizadas.")
 
 create_sidebar.sidebar_created()
 
