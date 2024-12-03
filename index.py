@@ -178,6 +178,12 @@ st.markdown(
     """,
     unsafe_allow_html=True)
 
+st.markdown("""
+    <p><strong>Fontes de Dados</strong></p>
+    <p></p>
+    """,
+    unsafe_allow_html=True)
+
 #3. Análise da cobertua e distribuição da rede de abastecimento de água
 utils.title_numbered_blue_dot(
     num= 3,
@@ -216,7 +222,25 @@ utils.popover_metodologia(
         Finalmente, foi calculada a diferença entre as linhas dos logradouros e a geometria da área de cobertura da rede para obtenção dos trechos de logradouro que não possuem cobertura de abastecimento de água. 
         """),
     obstaculos = (
-        """Utilizar a rua/logradouro como unidade de acesso ao domicílio vai contabilizar a ausência de rede mesmo onde não tem domicílio. """
+        """Utilizar a rua/logradouro como unidade de acesso ao domicílio vai contabilizar a ausência de rede mesmo onde não tem domicílio."""
     )
 )
+
+st.markdown(
+    """<p><strong>Acesso aos materiais</strong></p>
+    <ol>
+        <li>Shapefiles</li>
+        <li>Mapas Interativos</li>
+        <li>Notebooks</li>
+    </ol>
+    """,
+    unsafe_allow_html=True)
+
+st.markdown("""
+    <p><strong>Fontes de Dados</strong></p>
+    <p></p>
+    """,
+    unsafe_allow_html=True)
+
+
 
