@@ -4,8 +4,7 @@ import pandas as pd
 import leafmap.foliumap as leafmap
 from folium import LayerControl, TileLayer
 from os.path import join
-import utils
-
+from utils import functions, create_sidebar
 
 
 
@@ -15,7 +14,7 @@ distrito = gpd.read_file(join("data", "2024_11_26", "03_consumo_distrito"))
 subbac = gpd.read_file(join("data", "2024_11_26", "03_consumo_subbac"))
 subpref = gpd.read_file(join("data", "2024_11_26", "03_consumo_subprefeitura"))
 fcu = gpd.read_file(join("data", "2024_11_26", "pop_fcu"))
-#https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios_preliminares/malha_com_atributos/setores/shp/UF/SP/SP_Malha_Preliminar_2022.zip
+
 
 unidades_list = [
     ("Subprefeituras", "Lorem ipsum dolor sit amet...", 'subpref', 'nm_subpref'),
@@ -31,19 +30,12 @@ st.title("Dados de Abastecimento de Água")
 st.header("Metodologia de análise dos dados | PMSB 2024 | CODATA")
 st.text("Este material tem por objetivo registrar a metodologia referente ao processamento de dados elaborado por Codata para a elaboração do diagnóstico do Plano Municipal de Saneamento Básico (2024/2025). Nesse sentido, ele deve ser resultado de um processo enquanto as análises estão sendo realizadas.")
 
-
-#testes
-import random
-num_rand = random.randint(1, 45)
-abc = random.choice(["a", "b", "c"])
-num_rand
-abc
-st.dataframe(fcu)
+create_sidebar.sidebar_created()
 
 # 1: Cálculo populacional e de domicílios com base no Censo 2022
-utils.title_numbered_blue_dot(num = 1, title_name = "Cálculo populacional e de domicílios com base no Censo 2022")
+functions.title_numbered_blue_dot(num = 1, title_name = "Cálculo populacional e de domicílios com base no Censo 2022")
 
-utils.columns_bullet_list(
+functions.columns_bullet_list(
     title_bullet_list = "Desagregado por", 
     itens=unidades_list)
 
@@ -131,7 +123,7 @@ with cols_b2:
         hide_index=True
     )
 
-utils.popover_metodologia(
+functions.popover_metodologia(
     name_popover = "Metodologia Completa de Cálculo de População", 
     metodologia = ("""
         Foram utilizadas as malhas disponíveis em duas bases de dados principais, a do Censo Demográfico de 2022, com as informações agregadas por setores censitários disponibilizada pelo IBGE1; e as das malhas das unidades de desagregação, disponibilizadas pelo GeoSampa2. 
@@ -149,9 +141,9 @@ utils.popover_metodologia(
 
 
 # 2. Demanda da População por água
-utils.title_numbered_blue_dot(num = 2, title_name = "Demanda da População por água")
+functions.title_numbered_blue_dot(num = 2, title_name = "Demanda da População por água")
 
-utils.columns_bullet_list(
+functions.columns_bullet_list(
     title_bullet_list = "Desagregado por", 
     itens=unidades_list
 )
@@ -185,7 +177,7 @@ st.markdown("""
     unsafe_allow_html=True)
 
 #3. Análise da cobertua e distribuição da rede de abastecimento de água
-utils.title_numbered_blue_dot(
+functions.title_numbered_blue_dot(
     num= 3,
     title_name = "Análise da cobertua e distribuição da rede de abastecimento de água"
 )
@@ -213,7 +205,7 @@ with cols_d2:
 
 #st.bar_chart()
 
-utils.popover_metodologia(
+functions.popover_metodologia(
     name_popover = "Metodologia Completa de Cálculo", 
     metodologia = ("""
         Foi realizado o cruzamento entre as feições da rede de abastecimento de água e as feições de logradouros oficiais para identificar e quantificar a cobertura de abastecimento de água no município. Os logradouros são entendidos como via de acesso aos imóveis que necessitam de abastecimento de água e foram escolhidos por serem uma base georreferenciada mais precisa do que outras alternativas, como o CNEFE3. 
