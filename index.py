@@ -161,7 +161,7 @@ utils.columns_bullet_list(
     itens=unidades_list
 )
 
-with st.container():
+with st.container(border=True):
     cols_c1, cols_c2 = st.columns(2)
     with cols_c1:
         st.text("Consumo por pessoa")
@@ -172,6 +172,16 @@ with st.container():
     
     st.text("Demanda estimada por setor")
     st.markdown("<h3>População <i>α</i> X 140</h3>", unsafe_allow_html=True)
+
+st.markdown(
+    """<p><strong>Acesso aos materiais</strong></p>
+    <ol>
+        <li>Shapefiles</li>
+        <li>Mapas Interativos</li>
+        <li>Notebooks</li>
+    </ol>
+    """,
+    unsafe_allow_html=True)
 
 
 
