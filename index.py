@@ -39,6 +39,7 @@ create_sidebar.sidebar_created()
 # 1: Cálculo populacional e de domicílios com base no Censo 2022
 functions.title_numbered_blue_dot(num = 1, title_name = "Cálculo populacional e de domicílios com base no Censo 2022")
 
+
 functions.columns_bullet_list(
     title_bullet_list = "Desagregado por", 
     itens=unidades_list)
