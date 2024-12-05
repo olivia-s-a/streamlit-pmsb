@@ -6,9 +6,18 @@ from folium import LayerControl, TileLayer
 from os.path import join
 from utils import functions, create_sidebar
 
+#page config
+st.set_page_config(
+    page_title="Dados de Saneamento em São Paulo", 
+    page_icon=None,
+    layout= "wide")
+
 #Read css
 with open("styles.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
 
 # Dados
 distrito = gpd.read_file(join("data", "2024_11_26", "03_consumo_distrito"))
@@ -29,10 +38,16 @@ unidades = pd.DataFrame(unidades_list, columns=['name', 'desc', 'gdf_name', 'col
 
 
 # Cabeçalho
-with st.container(border=False):
-    st.title("Dados de Abastecimento de Água")
-    st.subheader("Metodologia de análise dos dados | PMSB 2024 | CODATA")
-    st.text("Este material tem por objetivo registrar a metodologia referente ao processamento de dados elaborado por Codata para a elaboração do diagnóstico do Plano Municipal de Saneamento Básico (2024/2025). Nesse sentido, ele deve ser resultado de um processo enquanto as análises estão sendo realizadas.")
+
+container1_header = st.container(border=False, key="container1_header")
+path_img = join("img", "img-init-streamlit.svg")
+container1_header.image(path_img)
+container1_header.text("""Análise de dados referente ao Plano Municipal de Saneamento 2024""")
+
+container2_header = st.container(border=False, key="container2_header")
+container2_header.title("Dados de Abastecimento de Água")
+container2_header.subheader("Metodologia de análise dos dados | PMSB 2024 | CODATA")
+container2_header.text("Este material tem por objetivo registrar a metodologia referente ao processamento de dados elaborado por Codata para a elaboração do diagnóstico do Plano Municipal de Saneamento Básico (2024/2025). Nesse sentido, ele deve ser resultado de um processo enquanto as análises estão sendo realizadas.")
 
 create_sidebar.sidebar_created()
 

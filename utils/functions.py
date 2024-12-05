@@ -15,7 +15,7 @@ def title_numbered_blue_dot(num, title_name):
                 <div class = "title-blue-dot">{title_name}</div>""", 
             unsafe_allow_html=True)
     
-    st.container(height= 1, border=False)
+    st.container(height= 2, border=False)
 
 def columns_bullet_list(title_bullet_list, itens):
     st.markdown(f"<h5>{title_bullet_list}</h5>", unsafe_allow_html=True)
@@ -25,12 +25,14 @@ def columns_bullet_list(title_bullet_list, itens):
         col = cols[a]  
         with col:
             st.markdown(
-                f"""<p>
+                f"""<p >
                     <strong>
                         {a + 1}. {item[0]}
                     </strong>
-                    <br> {item[1]}
-                </p>""", unsafe_allow_html=True
+                    <br> 
+                    <div class = "description-bullet-list">{item[1]}</div>
+                </p>""",
+                unsafe_allow_html=True
             )
 
 def popover_metodologia(name_popover, metodologia, obstaculos):
@@ -38,12 +40,21 @@ def popover_metodologia(name_popover, metodologia, obstaculos):
     with st.popover(name_popover):
         st.subheader(name_popover)
         st.markdown(
-            "<ol>" + "".join(
-                [f"<li>{line}</li>" for line in lines]
-            ) + "</ol>", 
+            "<ol>" 
+            + ""
+            .join(
+                [f"""
+                    <li>{line}</li>
+                """ for line in lines]
+            ) 
+            + 
+            "</ol>", 
             unsafe_allow_html=True
         )
 
         st.subheader("Obstáculos")
         st.text(obstaculos)
+
+
+
 
