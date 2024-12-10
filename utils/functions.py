@@ -16,7 +16,7 @@ def title_numbered_blue_dot(num, title_name):
             <p class = "li-blue-dot">
                 <div class = "title-blue-dot">{title_name}</div>""", 
             unsafe_allow_html=True)
-    
+    #arrumar essa partezinha
     st.container(height= 2, border=False)
 
 def columns_bullet_list(title_bullet_list, itens):
@@ -57,34 +57,12 @@ def popover_metodologia(name_popover, metodologia, obstaculos):
         st.subheader("Obstáculos")
         st.text(obstaculos)
 
-def map_1(gdf_unidade, columns_names):
-    m = folium.Map(
-        tiles = "Cartodb Positron",
-        zoom_control=False,
-        scrollWheelZoom = False,
-        dragging = True
-        )
-    
-    gdf_unidade.explore(
-        m = m,
-        color= '#0D04FF',
-        tooltip=list(columns_names.keys()),
-        tooltip_kwds={
-            'aliases': list(columns_names.values()),
-            'localize': True
-        },
-        popup=list(columns_names.keys()),
-        popup_kwds={
-            'aliases': list(columns_names.values()),
-            'localize': True
-        }
-    )
-    minx, miny, maxx, maxy = gdf_unidade.to_crs('EPSG:4326').total_bounds
-    minx += 0.25
-    bounds=[(miny, minx),(maxy, maxx)]
-    m.fit_bounds(bounds)
-    
-    plot_map = st_folium(m, height=600)
+def find_lat_lon(gdf):
+    for index, row in gdf.iterrows():
+        centroid = row['geometry'].centroid
+        gdf.at[index, 'lat'] = centroid.y
+        gdf.at[index, 'lon'] = centroid.x
+    return gdf
 
 
 

@@ -1,8 +1,8 @@
 import streamlit as st
 import geopandas as gpd
 import pandas as pd
-import leafmap.foliumap as leafmap
-from folium import LayerControl, TileLayer
+import folium
+from streamlit_folium import st_folium
 from os.path import join
 from utils import (functions, create_sidebar)
 
@@ -33,6 +33,8 @@ unidades_list = [
     ("Sub Bacias Hidrográficas", "Lorem ipsum dolor sit amet...", 'subbac', 'nm_bacia_h')
 ]
 unidades = pd.DataFrame(unidades_list, columns=['name', 'desc', 'gdf_name', 'column_name'])
+
+
 
 
 
@@ -112,7 +114,53 @@ columns_names ={
 }
 cols_b1, cols_b2 = st.columns(2)
 with cols_b1:
-    functions.map_1(gdf_unidade, columns_names)
+    lat_lon_unidade = functions.find_lat_lon(gdf=gdf_unidade)
+    m = folium.Map(
+        tiles = "Cartodb Positron",
+        zoom_control=True,
+        scrollWheelZoom = True,
+        dragging = True
+        )
+    
+    gdf_unidade.explore(
+        m = m,
+        color= '#0D04FF',
+        tooltip=list(columns_names.keys()),
+        tooltip_kwds={
+            'aliases': list(columns_names.values()),
+            'localize': True
+        },
+        popup=list(columns_names.keys()),
+        popup_kwds={
+            'aliases': list(columns_names.values()),
+            'localize': True
+        }
+    )
+    #transformar em função e passar todos os mapas pra um arquivo maps.py
+    if choice_name !=None:
+        name_unidade = lat_lon_unidade[lat_lon_unidade[name_column_unidade]==choice_name]
+
+
+        if not name_unidade.empty:
+            lat = name_unidade.iloc[0]['lat']
+            lon = name_unidade.iloc[0]['lon']
+
+            folium.Marker(
+                location=[lat, lon],
+                icon=folium.Icon(color="white")
+                ).add_to(m)
+
+        
+        minx, miny, maxx, maxy = name_unidade.to_crs('EPSG:4326').total_bounds
+        bounds=[(miny, minx),(maxy, maxx)]
+        m.fit_bounds(bounds)
+
+    else:
+        minx, miny, maxx, maxy = gdf_unidade.to_crs('EPSG:4326').total_bounds
+        bounds=[(miny, minx),(maxy, maxx)]
+        m.fit_bounds(bounds)
+    
+    plot_map = st_folium(m, height=600)
 with cols_b2:
     st.dataframe(
         gdf_unidade[
