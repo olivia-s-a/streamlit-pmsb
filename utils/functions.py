@@ -1,4 +1,6 @@
+import folium
 import streamlit as st
+from streamlit_folium import st_folium
 
 
 def title_numbered_blue_dot(num, title_name):
@@ -54,6 +56,35 @@ def popover_metodologia(name_popover, metodologia, obstaculos):
 
         st.subheader("Obstáculos")
         st.text(obstaculos)
+
+def map_1(gdf_unidade, columns_names):
+    m = folium.Map(
+        tiles = "Cartodb Positron",
+        zoom_control=False,
+        scrollWheelZoom = False,
+        dragging = True
+        )
+    
+    gdf_unidade.explore(
+        m = m,
+        color= '#0D04FF',
+        tooltip=list(columns_names.keys()),
+        tooltip_kwds={
+            'aliases': list(columns_names.values()),
+            'localize': True
+        },
+        popup=list(columns_names.keys()),
+        popup_kwds={
+            'aliases': list(columns_names.values()),
+            'localize': True
+        }
+    )
+    minx, miny, maxx, maxy = gdf_unidade.to_crs('EPSG:4326').total_bounds
+    minx += 0.25
+    bounds=[(miny, minx),(maxy, maxx)]
+    m.fit_bounds(bounds)
+    
+    plot_map = st_folium(m, height=600)
 
 
 

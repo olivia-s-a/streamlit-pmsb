@@ -4,7 +4,7 @@ import pandas as pd
 import leafmap.foliumap as leafmap
 from folium import LayerControl, TileLayer
 from os.path import join
-from utils import functions, create_sidebar
+from utils import (functions, create_sidebar)
 
 #page config
 st.set_page_config(
@@ -112,26 +112,7 @@ columns_names ={
 }
 cols_b1, cols_b2 = st.columns(2)
 with cols_b1:
-    m1 = leafmap.Map(tiles = "Cartodb Positron")
-    
-    gdf_unidade.explore(
-        m = m1,
-        color= '#0D04FF',
-        tooltip=list(columns_names.keys()),
-        tooltip_kwds={
-            'aliases': list(columns_names.values()),
-            'localize': True
-        },
-        popup=list(columns_names.keys()),
-        popup_kwds={
-            'aliases': list(columns_names.values()),
-            'localize': True
-        }
-    )
-    minx, miny, maxx, maxy = gdf_unidade.to_crs('EPSG:4326').total_bounds
-    bounds=[(miny, minx),(maxy, maxx)]
-    m1.fit_bounds(bounds)
-    st.components.v1.html(m1.to_html(), height=600)
+    functions.map_1(gdf_unidade, columns_names)
 with cols_b2:
     st.dataframe(
         gdf_unidade[
