@@ -10,7 +10,7 @@ from utils import functions, create_sidebar
 st.set_page_config(
     page_title="Dados de Saneamento em São Paulo", 
     page_icon=None,
-    layout= "wide")
+    layout= "wide") #ou center
 
 #Read css
 with open("styles.css") as f:
@@ -100,6 +100,8 @@ if choice_name !=None:
         )
 else:
     sum_unidade = gdf_unidade[pop_column].sum()
+    if name_gdf_unidade == 'subpref':
+        sum_unidade = sum_unidade+2
 
 st.subheader(f'{sum_unidade:,} pessoas'.replace(",", "."))
 
